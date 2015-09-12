@@ -57,6 +57,43 @@ Example Usage
 
 
 
+Testing
+-------
+
+locstor uses the [karma test runner](http://karma-runner.github.io/0.12/index.html)
+to test the code running in actual browsers.
+
+The tests require the following additional dependencies:
+
+- [node.js](http://nodejs.org/)
+- [karma](http://karma-runner.github.io/0.12/index.html)
+- [karma-qunit](https://github.com/karma-runner/karma-qunit)
+
+Don't forget to also install the karma command line tools with `npm install -g karma-cli`.
+
+You will also need to install a launcher for each browser you want to test with,
+as well as the browsers themselves. Typically you install a karma launcher with
+`npm install -g karma-chrome-launcher`. You can edit the config file at
+`karma/test-mac.conf.js` or create a new one (e.g. `karma/test-windows.conf.js`)
+if you want to change the browsers that are tested on.
+
+Once you have installed all the dependencies, start karma with
+`karma start karma/test-mac.conf.js` (or your customized config file, if
+applicable). Once karma is running, you can keep it running in between tests.
+
+Next you need to compile the test.go file to javascript so it can run in the
+browsers:
+
+```
+gopherjs build karma/go/locstor_test.go -o karma/js/locstor_test.js
+```
+
+Finally run the tests with `karma run karma/test-mac.conf.js` (changing the name
+of the config file if needed).
+
+If you are on a unix-like operating system, you can recompile and run the tests
+in one go by running the provided bash script: `./karma/test.sh`.
+
 
 Contributing
 ------------

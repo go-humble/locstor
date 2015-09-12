@@ -33,7 +33,7 @@ func GetItem(key string) (string, error) {
 		return "", LocalStorageNotSupportedError
 	}
 	item := localStorage.Call("getItem", key)
-	if item == js.Undefined {
+	if item == js.Undefined || item == nil {
 		return "", nil
 	}
 	return item.String(), nil
@@ -46,7 +46,7 @@ func Key(item string) (string, error) {
 		return "", LocalStorageNotSupportedError
 	}
 	key := localStorage.Call("key", item)
-	if key == js.Undefined {
+	if key == js.Undefined || key == nil {
 		return "", nil
 	}
 	return key.String(), nil
@@ -66,8 +66,8 @@ func Length() (int, error) {
 	if localStorage == js.Undefined {
 		return 0, LocalStorageNotSupportedError
 	}
-	length := localStorage.Call("length")
-	if length == js.Undefined {
+	length := localStorage.Get("length")
+	if length == js.Undefined || length == nil {
 		return 0, nil
 	}
 	return length.Int(), nil
