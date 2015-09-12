@@ -5,7 +5,7 @@ Humble/locstor
 
 Version X.X.X (develop)
 
-locstor provides gopherjs bindings for the localstorage API. It allows you to
+locstor provides gopherjs bindings for the localStorage API. It allows you to
 store and retreive any arbitrary go data structure, and is intended to be
 compiled to javascript with [gopherjs](https://github.com/gopherjs/gopherjs)
 and run in the browser. locstor works great as a stand-alone package or in
@@ -13,6 +13,12 @@ combination with other [Humble](https://github.com/go-humble) packages.
 
 locstor is written in pure go. It feels like go, follows go idioms when
 possible, and compiles with the go tools.
+
+
+Development Status
+------------------
+
+locstor is a work in progress, but should be ready for use soon!
 
 
 Browser Support
