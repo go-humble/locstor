@@ -3,6 +3,11 @@
 // license, which can be found in the LICENSE file.
 
 // Package locstor provides gopherjs bindings for the localStorage API. It
-// allows you to store and retreive any arbitrary go data structure, and is
+// allows you to store and retrieve any arbitrary go data structure, and is
 // intended to be compiled to javascript with gopherjs and run in the browser.
+//
+// Version 0.1.0
+//
+// For the full source code, example usage, and more information visit
+// https://github.com/go-humble/locstor.
 package locstor
