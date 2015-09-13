@@ -155,10 +155,11 @@ if err := store.Save("numbers", []int{1, 2, 3}); err != nil {
 ```
 
 Use [`Find`](https://godoc.org/github.com/go-humble/locstor#DataStore.Find) to
-get existing data structures out of localStorage. The second argument to `Find`,
-called `holder`, is a pointer to a variable that is capable of holding the
-decoded data structure. Since in this case we stored a slice of ints, the type
-of holder should be `*[]int`.
+get existing data structures out of localStorage. Find works similarly to
+[`json.Unmarshal`](http://golang.org/pkg/encoding/json/#Unmarshal) from the
+standard library. The second argument to `Find`, called `holder`, is a pointer
+to a variable that is capable of holding the decoded data structure. Since in
+this case we stored a slice of ints, the type of holder should be `*[]int`.
 
 ```go
 gotNumbers := []int{}
