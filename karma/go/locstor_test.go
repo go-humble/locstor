@@ -36,9 +36,10 @@ func main() {
 		assert.Equal(err, nil, "Error in SetItem")
 		err = locstor.RemoveItem("foo")
 		assert.Equal(err, nil, "Error in RemoveItem")
-		gotItem, err := locstor.GetItem("foo")
-		assert.Equal(err, nil, "Error in GetItem")
-		assert.Equal(gotItem, "", "")
+		_, err = locstor.GetItem("foo")
+		assert.NotEqual(err, nil, "Expected error but got nil")
+		assert.Ok(reflect.TypeOf(err) == reflect.TypeOf(locstor.ItemNotFoundError{}),
+			"Error was not correct the correct type")
 	})
 
 	qunit.Test("Length", func(assert qunit.QUnitAssert) {
