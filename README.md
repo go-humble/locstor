@@ -15,12 +15,6 @@ locstor is written in pure go. It feels like go, follows go idioms when
 possible, and compiles with the go tools.
 
 
-Development Status
-------------------
-
-locstor is a work in progress, but should be ready for use soon!
-
-
 Browser Support
 ---------------
 
