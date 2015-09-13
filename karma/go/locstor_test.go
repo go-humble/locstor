@@ -6,6 +6,9 @@
 package main
 
 import (
+	"fmt"
+	"reflect"
+
 	"github.com/go-humble/locstor"
 
 	"github.com/rusco/qunit"
@@ -58,5 +61,42 @@ func main() {
 		gotLength, err := locstor.Length()
 		assert.Equal(err, nil, "Error in Length")
 		assert.Equal(gotLength, 0, "")
+	})
+
+	testObjects := []interface{}{
+		"foo",
+		123,
+		true,
+		[]string{"a", "b", "c"},
+		map[string]bool{"yes": true, "false": false},
+		struct {
+			Foo string
+			Bar int
+		}{
+			Foo: "fiz",
+			Bar: 42,
+		},
+	}
+
+	qunit.Test("JSONEncoderDecoder", func(assert qunit.QUnitAssert) {
+		for _, original := range testObjects {
+			encoded, err := locstor.JSON.Encode(original)
+			assert.Equal(err, nil, fmt.Sprintf("Error in Encode: %v", err))
+			decoded := reflect.New(reflect.TypeOf(original)).Interface()
+			err = locstor.JSON.Decode(encoded, &decoded)
+			assert.Equal(err, nil, fmt.Sprintf("Error in Decode: %v", err))
+			assert.DeepEqual(decoded, original, "")
+		}
+	})
+
+	qunit.Test("BinaryEncoderDecoder", func(assert qunit.QUnitAssert) {
+		for _, original := range testObjects {
+			encoded, err := locstor.Binary.Encode(original)
+			assert.Equal(err, nil, fmt.Sprintf("Error in Encode: %v", err))
+			decoded := reflect.New(reflect.TypeOf(original)).Interface()
+			err = locstor.Binary.Decode(encoded, decoded)
+			assert.Equal(err, nil, fmt.Sprintf("Error in Decode: %v", err))
+			assert.DeepEqual(decoded, original, "")
+		}
 	})
 }
