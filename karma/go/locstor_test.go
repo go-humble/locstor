@@ -38,7 +38,7 @@ func main() {
 		assert.Equal(err, nil, "Error in RemoveItem")
 		_, err = locstor.GetItem("foo")
 		assert.NotEqual(err, nil, "Expected error but got nil")
-		assert.Ok(reflect.TypeOf(err) == reflect.TypeOf(locstor.ItemNotFoundError{}),
+		assert.DeepEqual(reflect.TypeOf(err), reflect.TypeOf(locstor.ItemNotFoundError{}),
 			"Error was not correct the correct type")
 	})
 
@@ -81,10 +81,10 @@ func main() {
 
 	qunit.Test("JSONEncoderDecoder", func(assert qunit.QUnitAssert) {
 		for _, original := range testObjects {
-			encoded, err := locstor.JSON.Encode(original)
+			encoded, err := locstor.JSONEncoding.Encode(original)
 			assert.Equal(err, nil, fmt.Sprintf("Error in Encode: %v", err))
 			decoded := reflect.New(reflect.TypeOf(original)).Interface()
-			err = locstor.JSON.Decode(encoded, &decoded)
+			err = locstor.JSONEncoding.Decode(encoded, &decoded)
 			assert.Equal(err, nil, fmt.Sprintf("Error in Decode: %v", err))
 			assert.DeepEqual(decoded, original, "")
 		}
@@ -92,12 +92,39 @@ func main() {
 
 	qunit.Test("BinaryEncoderDecoder", func(assert qunit.QUnitAssert) {
 		for _, original := range testObjects {
-			encoded, err := locstor.Binary.Encode(original)
+			encoded, err := locstor.BinaryEncoding.Encode(original)
 			assert.Equal(err, nil, fmt.Sprintf("Error in Encode: %v", err))
 			decoded := reflect.New(reflect.TypeOf(original)).Interface()
-			err = locstor.Binary.Decode(encoded, decoded)
+			err = locstor.BinaryEncoding.Decode(encoded, decoded)
 			assert.Equal(err, nil, fmt.Sprintf("Error in Decode: %v", err))
 			assert.DeepEqual(decoded, original, "")
+		}
+	})
+
+	qunit.Test("DataStoreSave", func(assert qunit.QUnitAssert) {
+		store := locstor.NewDataStore(locstor.JSONEncoding)
+		for _, original := range testObjects {
+			err := store.Save("foo", original)
+			assert.Equal(err, nil, fmt.Sprintf("Error in Save: %v", err))
+			got := reflect.New(reflect.TypeOf(original)).Interface()
+			err = store.Find("foo", got)
+			assert.Equal(err, nil, fmt.Sprintf("Error in Find: %v", err))
+			assert.DeepEqual(got, original, "")
+		}
+	})
+
+	qunit.Test("DataStoreDelete", func(assert qunit.QUnitAssert) {
+		store := locstor.NewDataStore(locstor.JSONEncoding)
+		for _, original := range testObjects {
+			err := store.Save("foo", original)
+			assert.Equal(err, nil, fmt.Sprintf("Error in Save: %v", err))
+			err = store.Delete("foo")
+			assert.Equal(err, nil, fmt.Sprintf("Error in Delete: %v", err))
+			err = store.Find("foo", nil)
+			assert.NotEqual(err, nil,
+				fmt.Sprintf("Expected error in Find but got nil"))
+			assert.DeepEqual(reflect.TypeOf(err), reflect.TypeOf(locstor.ItemNotFoundError{}),
+				"Error was not correct the correct type")
 		}
 	})
 }

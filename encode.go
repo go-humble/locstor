@@ -7,10 +7,12 @@ import (
 )
 
 var (
-	// Binary is a ready-to-use instance of BinaryEncoderDecoder
-	Binary = &BinaryEncoderDecoder{}
-	// JSON is a ready-to-use instance of JSONEncoderDecoder
-	JSON = &JSONEncoderDecoder{}
+	// BinaryEncoding is a ready-to-use implementation of EncoderDecoder which
+	// encodes data structures in a binary format using the gob package.
+	BinaryEncoding = &binaryEncoderDecoder{}
+	// JSONEncoding is a ready-to-use implementation of EncoderDecoder which
+	// encodes data structures as json.
+	JSONEncoding = &jsonEncoderDecoder{}
 )
 
 // Encoder is an interface implemented by objects which can encode an arbitrary
@@ -34,26 +36,26 @@ type EncoderDecoder interface {
 	Decoder
 }
 
-// JSONEncoderDecoder is an implementation of EncoderDecoder which uses json
+// jsonEncoderDecoder is an implementation of EncoderDecoder which uses json
 // encoding.
-type JSONEncoderDecoder struct{}
+type jsonEncoderDecoder struct{}
 
 // Encode implements the Encode method of Encoder
-func (JSONEncoderDecoder) Encode(v interface{}) ([]byte, error) {
+func (jsonEncoderDecoder) Encode(v interface{}) ([]byte, error) {
 	return json.Marshal(v)
 }
 
 // Decode implements the Decode method of Decoder
-func (JSONEncoderDecoder) Decode(data []byte, v interface{}) error {
+func (jsonEncoderDecoder) Decode(data []byte, v interface{}) error {
 	return json.Unmarshal(data, v)
 }
 
-// BinaryEncoderDecoder is an implementation of EncoderDecoder which uses binary
+// binaryEncoderDecoder is an implementation of EncoderDecoder which uses binary
 // encoding via the gob package in the standard library.
-type BinaryEncoderDecoder struct{}
+type binaryEncoderDecoder struct{}
 
 // Encode implements the Encode method of Encoder
-func (b BinaryEncoderDecoder) Encode(v interface{}) ([]byte, error) {
+func (b binaryEncoderDecoder) Encode(v interface{}) ([]byte, error) {
 	buf := bytes.NewBuffer([]byte{})
 	enc := gob.NewEncoder(buf)
 	if err := enc.Encode(v); err != nil {
@@ -63,7 +65,7 @@ func (b BinaryEncoderDecoder) Encode(v interface{}) ([]byte, error) {
 }
 
 // Decode implements the Decode method of Decoder
-func (b BinaryEncoderDecoder) Decode(data []byte, v interface{}) error {
+func (b binaryEncoderDecoder) Decode(data []byte, v interface{}) error {
 	buf := bytes.NewBuffer(data)
 	dec := gob.NewDecoder(buf)
 	return dec.Decode(v)

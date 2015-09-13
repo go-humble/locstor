@@ -28765,20 +28765,29 @@ $packages["encoding/json"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/go-humble/locstor"] = (function() {
-	var $pkg = {}, $init, bytes, gob, json, errors, fmt, js, JSONEncoderDecoder, BinaryEncoderDecoder, ItemNotFoundError, sliceType, sliceType$1, localStorage, newItemNotFoundError, SetItem, GetItem, Key, RemoveItem, Length, Clear;
+	var $pkg = {}, $init, bytes, gob, json, errors, fmt, js, DataStore, EncoderDecoder, jsonEncoderDecoder, binaryEncoderDecoder, ItemNotFoundError, sliceType, sliceType$1, localStorage, NewDataStore, newItemNotFoundError, SetItem, GetItem, Key, RemoveItem, Length, Clear;
 	bytes = $packages["bytes"];
 	gob = $packages["encoding/gob"];
 	json = $packages["encoding/json"];
 	errors = $packages["errors"];
 	fmt = $packages["fmt"];
 	js = $packages["github.com/gopherjs/gopherjs/js"];
-	JSONEncoderDecoder = $pkg.JSONEncoderDecoder = $newType(0, $kindStruct, "locstor.JSONEncoderDecoder", "JSONEncoderDecoder", "github.com/go-humble/locstor", function() {
+	DataStore = $pkg.DataStore = $newType(0, $kindStruct, "locstor.DataStore", "DataStore", "github.com/go-humble/locstor", function(Encoding_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.Encoding = $ifaceNil;
+			return;
+		}
+		this.Encoding = Encoding_;
+	});
+	EncoderDecoder = $pkg.EncoderDecoder = $newType(8, $kindInterface, "locstor.EncoderDecoder", "EncoderDecoder", "github.com/go-humble/locstor", null);
+	jsonEncoderDecoder = $pkg.jsonEncoderDecoder = $newType(0, $kindStruct, "locstor.jsonEncoderDecoder", "jsonEncoderDecoder", "github.com/go-humble/locstor", function() {
 		this.$val = this;
 		if (arguments.length === 0) {
 			return;
 		}
 	});
-	BinaryEncoderDecoder = $pkg.BinaryEncoderDecoder = $newType(0, $kindStruct, "locstor.BinaryEncoderDecoder", "BinaryEncoderDecoder", "github.com/go-humble/locstor", function() {
+	binaryEncoderDecoder = $pkg.binaryEncoderDecoder = $newType(0, $kindStruct, "locstor.binaryEncoderDecoder", "binaryEncoderDecoder", "github.com/go-humble/locstor", function() {
 		this.$val = this;
 		if (arguments.length === 0) {
 			return;
@@ -28794,26 +28803,64 @@ $packages["github.com/go-humble/locstor"] = (function() {
 	});
 	sliceType = $sliceType($Uint8);
 	sliceType$1 = $sliceType($emptyInterface);
-	JSONEncoderDecoder.ptr.prototype.Encode = function(v) {
+	NewDataStore = function(encoding) {
+		var $ptr, encoding;
+		return new DataStore.ptr(encoding);
+	};
+	$pkg.NewDataStore = NewDataStore;
+	DataStore.ptr.prototype.Save = function(key, item) {
+		var $ptr, _r, _tuple, encodedItem, err, item, key, store, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _tuple = $f._tuple; encodedItem = $f.encodedItem; err = $f.err; item = $f.item; key = $f.key; store = $f.store; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		store = $clone(this, DataStore);
+		_r = store.Encoding.Encode(item); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r; encodedItem = _tuple[0]; err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			return err;
+		}
+		return SetItem(key, $bytesToString(encodedItem));
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: DataStore.ptr.prototype.Save }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.encodedItem = encodedItem; $f.err = err; $f.item = item; $f.key = key; $f.store = store; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	DataStore.prototype.Save = function(key, item) { return this.$val.Save(key, item); };
+	DataStore.ptr.prototype.Find = function(key, holder) {
+		var $ptr, _r, _r$1, _tuple, encodedItem, err, holder, key, store, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; encodedItem = $f.encodedItem; err = $f.err; holder = $f.holder; key = $f.key; store = $f.store; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		store = $clone(this, DataStore);
+		_r = GetItem(key); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r; encodedItem = _tuple[0]; err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			return err;
+		}
+		_r$1 = store.Encoding.Decode(new sliceType($stringToBytes(encodedItem)), holder); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		return _r$1;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: DataStore.ptr.prototype.Find }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.encodedItem = encodedItem; $f.err = err; $f.holder = holder; $f.key = key; $f.store = store; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	DataStore.prototype.Find = function(key, holder) { return this.$val.Find(key, holder); };
+	DataStore.ptr.prototype.Delete = function(key) {
+		var $ptr, key, store;
+		store = $clone(this, DataStore);
+		return RemoveItem(key);
+	};
+	DataStore.prototype.Delete = function(key) { return this.$val.Delete(key); };
+	jsonEncoderDecoder.ptr.prototype.Encode = function(v) {
 		var $ptr, _r, v, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		_r = json.Marshal(v); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		return _r;
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: JSONEncoderDecoder.ptr.prototype.Encode }; } $f.$ptr = $ptr; $f._r = _r; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: jsonEncoderDecoder.ptr.prototype.Encode }; } $f.$ptr = $ptr; $f._r = _r; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	JSONEncoderDecoder.prototype.Encode = function(v) { return this.$val.Encode(v); };
-	JSONEncoderDecoder.ptr.prototype.Decode = function(data, v) {
+	jsonEncoderDecoder.prototype.Encode = function(v) { return this.$val.Encode(v); };
+	jsonEncoderDecoder.ptr.prototype.Decode = function(data, v) {
 		var $ptr, _r, data, v, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; data = $f.data; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		_r = json.Unmarshal(data, v); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		return _r;
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: JSONEncoderDecoder.ptr.prototype.Decode }; } $f.$ptr = $ptr; $f._r = _r; $f.data = data; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: jsonEncoderDecoder.ptr.prototype.Decode }; } $f.$ptr = $ptr; $f._r = _r; $f.data = data; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	JSONEncoderDecoder.prototype.Decode = function(data, v) { return this.$val.Decode(data, v); };
-	BinaryEncoderDecoder.ptr.prototype.Encode = function(v) {
+	jsonEncoderDecoder.prototype.Decode = function(data, v) { return this.$val.Decode(data, v); };
+	binaryEncoderDecoder.ptr.prototype.Encode = function(v) {
 		var $ptr, _r, b, buf, enc, err, v, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; b = $f.b; buf = $f.buf; enc = $f.enc; err = $f.err; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		b = $clone(this, BinaryEncoderDecoder);
+		b = $clone(this, binaryEncoderDecoder);
 		buf = bytes.NewBuffer(new sliceType([]));
 		enc = gob.NewEncoder(buf);
 		_r = enc.Encode(v); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
@@ -28824,20 +28871,20 @@ $packages["github.com/go-humble/locstor"] = (function() {
 			return [sliceType.nil, err];
 		/* } */ case 3:
 		return [buf.Bytes(), $ifaceNil];
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: BinaryEncoderDecoder.ptr.prototype.Encode }; } $f.$ptr = $ptr; $f._r = _r; $f.b = b; $f.buf = buf; $f.enc = enc; $f.err = err; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: binaryEncoderDecoder.ptr.prototype.Encode }; } $f.$ptr = $ptr; $f._r = _r; $f.b = b; $f.buf = buf; $f.enc = enc; $f.err = err; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	BinaryEncoderDecoder.prototype.Encode = function(v) { return this.$val.Encode(v); };
-	BinaryEncoderDecoder.ptr.prototype.Decode = function(data, v) {
+	binaryEncoderDecoder.prototype.Encode = function(v) { return this.$val.Encode(v); };
+	binaryEncoderDecoder.ptr.prototype.Decode = function(data, v) {
 		var $ptr, _r, b, buf, data, dec, v, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; b = $f.b; buf = $f.buf; data = $f.data; dec = $f.dec; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		b = $clone(this, BinaryEncoderDecoder);
+		b = $clone(this, binaryEncoderDecoder);
 		buf = bytes.NewBuffer(data);
 		dec = gob.NewDecoder(buf);
 		_r = dec.Decode(v); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		return _r;
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: BinaryEncoderDecoder.ptr.prototype.Decode }; } $f.$ptr = $ptr; $f._r = _r; $f.b = b; $f.buf = buf; $f.data = data; $f.dec = dec; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: binaryEncoderDecoder.ptr.prototype.Decode }; } $f.$ptr = $ptr; $f._r = _r; $f.b = b; $f.buf = buf; $f.data = data; $f.dec = dec; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	BinaryEncoderDecoder.prototype.Decode = function(data, v) { return this.$val.Decode(data, v); };
+	binaryEncoderDecoder.prototype.Decode = function(data, v) { return this.$val.Decode(data, v); };
 	ItemNotFoundError.ptr.prototype.Error = function() {
 		var $ptr, e;
 		e = $clone(this, ItemNotFoundError);
@@ -28921,11 +28968,14 @@ $packages["github.com/go-humble/locstor"] = (function() {
 		return $ifaceNil;
 	};
 	$pkg.Clear = Clear;
-	JSONEncoderDecoder.methods = [{prop: "Encode", name: "Encode", pkg: "", typ: $funcType([$emptyInterface], [sliceType, $error], false)}, {prop: "Decode", name: "Decode", pkg: "", typ: $funcType([sliceType, $emptyInterface], [$error], false)}];
-	BinaryEncoderDecoder.methods = [{prop: "Encode", name: "Encode", pkg: "", typ: $funcType([$emptyInterface], [sliceType, $error], false)}, {prop: "Decode", name: "Decode", pkg: "", typ: $funcType([sliceType, $emptyInterface], [$error], false)}];
+	DataStore.methods = [{prop: "Save", name: "Save", pkg: "", typ: $funcType([$String, $emptyInterface], [$error], false)}, {prop: "Find", name: "Find", pkg: "", typ: $funcType([$String, $emptyInterface], [$error], false)}, {prop: "Delete", name: "Delete", pkg: "", typ: $funcType([$String], [$error], false)}];
+	jsonEncoderDecoder.methods = [{prop: "Encode", name: "Encode", pkg: "", typ: $funcType([$emptyInterface], [sliceType, $error], false)}, {prop: "Decode", name: "Decode", pkg: "", typ: $funcType([sliceType, $emptyInterface], [$error], false)}];
+	binaryEncoderDecoder.methods = [{prop: "Encode", name: "Encode", pkg: "", typ: $funcType([$emptyInterface], [sliceType, $error], false)}, {prop: "Decode", name: "Decode", pkg: "", typ: $funcType([sliceType, $emptyInterface], [$error], false)}];
 	ItemNotFoundError.methods = [{prop: "Error", name: "Error", pkg: "", typ: $funcType([], [$String], false)}];
-	JSONEncoderDecoder.init([]);
-	BinaryEncoderDecoder.init([]);
+	DataStore.init([{prop: "Encoding", name: "Encoding", pkg: "", typ: EncoderDecoder, tag: ""}]);
+	EncoderDecoder.init([{prop: "Decode", name: "Decode", pkg: "", typ: $funcType([sliceType, $emptyInterface], [$error], false)}, {prop: "Encode", name: "Encode", pkg: "", typ: $funcType([$emptyInterface], [sliceType, $error], false)}]);
+	jsonEncoderDecoder.init([]);
+	binaryEncoderDecoder.init([]);
 	ItemNotFoundError.init([{prop: "msg", name: "msg", pkg: "github.com/go-humble/locstor", typ: $String, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
@@ -28936,8 +28986,8 @@ $packages["github.com/go-humble/locstor"] = (function() {
 		$r = errors.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = fmt.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = js.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$pkg.Binary = new BinaryEncoderDecoder.ptr();
-		$pkg.JSON = new JSONEncoderDecoder.ptr();
+		$pkg.BinaryEncoding = new binaryEncoderDecoder.ptr();
+		$pkg.JSONEncoding = new jsonEncoderDecoder.ptr();
 		localStorage = $global.localStorage;
 		$pkg.ErrLocalStorageNotSupported = errors.New("localStorage does not appear to be supported in this browser");
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
@@ -29105,7 +29155,7 @@ $packages["main"] = (function() {
 			_r = locstor.GetItem("foo"); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 			_tuple = _r; err = _tuple[1];
 			assert.NotEqual(err, $ifaceNil, "Expected error but got nil");
-			assert.Ok(new $Bool($interfaceIsEqual(reflect.TypeOf(err), reflect.TypeOf((x = new locstor.ItemNotFoundError.ptr(""), new x.constructor.elem(x))))), "Error was not correct the correct type");
+			assert.DeepEqual(reflect.TypeOf(err), reflect.TypeOf((x = new locstor.ItemNotFoundError.ptr(""), new x.constructor.elem(x))), "Error was not correct the correct type");
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.assert = assert; $f.err = err; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 		}));
 		qunit.Test("Length", (function(assert) {
@@ -29143,7 +29193,7 @@ $packages["main"] = (function() {
 				/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
 				decoded = [decoded];
 				original = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
-				_r = locstor.JSON.Encode(original); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r = locstor.JSONEncoding.Encode(original); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 				_tuple = _r; encoded = _tuple[0]; err = _tuple[1];
 				_arg = err;
 				_arg$1 = $ifaceNil;
@@ -29154,7 +29204,7 @@ $packages["main"] = (function() {
 				_r$3 = reflect.New(reflect.TypeOf(original)); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 				_r$4 = _r$3.Interface(); /* */ $s = 7; case 7: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 				decoded[0] = _r$4;
-				_r$5 = locstor.JSON.Decode(encoded, (decoded.$ptr || (decoded.$ptr = new ptrType(function() { return this.$target[0]; }, function($v) { this.$target[0] = $v; }, decoded)))); /* */ $s = 8; case 8: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+				_r$5 = locstor.JSONEncoding.Decode(encoded, (decoded.$ptr || (decoded.$ptr = new ptrType(function() { return this.$target[0]; }, function($v) { this.$target[0] = $v; }, decoded)))); /* */ $s = 8; case 8: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 				err = _r$5;
 				_arg$3 = err;
 				_arg$4 = $ifaceNil;
@@ -29176,7 +29226,7 @@ $packages["main"] = (function() {
 			/* while (true) { */ case 1:
 				/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
 				original = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
-				_r = locstor.Binary.Encode(original); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r = locstor.BinaryEncoding.Encode(original); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 				_tuple = _r; encoded = _tuple[0]; err = _tuple[1];
 				_arg = err;
 				_arg$1 = $ifaceNil;
@@ -29187,7 +29237,7 @@ $packages["main"] = (function() {
 				_r$3 = reflect.New(reflect.TypeOf(original)); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 				_r$4 = _r$3.Interface(); /* */ $s = 7; case 7: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 				decoded = _r$4;
-				_r$5 = locstor.Binary.Decode(encoded, decoded); /* */ $s = 8; case 8: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+				_r$5 = locstor.BinaryEncoding.Decode(encoded, decoded); /* */ $s = 8; case 8: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 				err = _r$5;
 				_arg$3 = err;
 				_arg$4 = $ifaceNil;
@@ -29199,6 +29249,78 @@ $packages["main"] = (function() {
 				_i++;
 			/* } */ $s = 1; continue; case 2:
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._ref = _ref; $f._tuple = _tuple; $f.assert = assert; $f.decoded = decoded; $f.encoded = encoded; $f.err = err; $f.original = original; $f.$s = $s; $f.$r = $r; return $f;
+		}));
+		qunit.Test("DataStoreSave", (function $b(assert) {
+			var $ptr, _arg, _arg$1, _arg$2, _arg$3, _arg$4, _arg$5, _i, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _ref, assert, err, got, original, store, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _ref = $f._ref; assert = $f.assert; err = $f.err; got = $f.got; original = $f.original; store = $f.store; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			assert = $clone(assert, qunit.QUnitAssert);
+			store = locstor.NewDataStore(locstor.JSONEncoding);
+			_ref = testObjects;
+			_i = 0;
+			/* while (true) { */ case 1:
+				/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+				original = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
+				_r = store.Save("foo", original); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				err = _r;
+				_arg = err;
+				_arg$1 = $ifaceNil;
+				_r$1 = fmt.Sprintf("Error in Save: %v", new sliceType([err])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+				_arg$2 = _r$1;
+				_r$2 = assert.Equal(_arg, _arg$1, _arg$2); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				_r$2;
+				_r$3 = reflect.New(reflect.TypeOf(original)); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				_r$4 = _r$3.Interface(); /* */ $s = 7; case 7: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+				got = _r$4;
+				_r$5 = store.Find("foo", got); /* */ $s = 8; case 8: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+				err = _r$5;
+				_arg$3 = err;
+				_arg$4 = $ifaceNil;
+				_r$6 = fmt.Sprintf("Error in Find: %v", new sliceType([err])); /* */ $s = 9; case 9: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+				_arg$5 = _r$6;
+				_r$7 = assert.Equal(_arg$3, _arg$4, _arg$5); /* */ $s = 10; case 10: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+				_r$7;
+				assert.DeepEqual(got, original, "");
+				_i++;
+			/* } */ $s = 1; continue; case 2:
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._ref = _ref; $f.assert = assert; $f.err = err; $f.got = got; $f.original = original; $f.store = store; $f.$s = $s; $f.$r = $r; return $f;
+		}));
+		qunit.Test("DataStoreDelete", (function $b(assert) {
+			var $ptr, _arg, _arg$1, _arg$2, _arg$3, _arg$4, _arg$5, _arg$6, _arg$7, _arg$8, _i, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _ref, assert, err, original, store, x$1, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _arg$6 = $f._arg$6; _arg$7 = $f._arg$7; _arg$8 = $f._arg$8; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _ref = $f._ref; assert = $f.assert; err = $f.err; original = $f.original; store = $f.store; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			assert = $clone(assert, qunit.QUnitAssert);
+			store = locstor.NewDataStore(locstor.JSONEncoding);
+			_ref = testObjects;
+			_i = 0;
+			/* while (true) { */ case 1:
+				/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+				original = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
+				_r = store.Save("foo", original); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				err = _r;
+				_arg = err;
+				_arg$1 = $ifaceNil;
+				_r$1 = fmt.Sprintf("Error in Save: %v", new sliceType([err])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+				_arg$2 = _r$1;
+				_r$2 = assert.Equal(_arg, _arg$1, _arg$2); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				_r$2;
+				err = store.Delete("foo");
+				_arg$3 = err;
+				_arg$4 = $ifaceNil;
+				_r$3 = fmt.Sprintf("Error in Delete: %v", new sliceType([err])); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				_arg$5 = _r$3;
+				_r$4 = assert.Equal(_arg$3, _arg$4, _arg$5); /* */ $s = 7; case 7: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+				_r$4;
+				_r$5 = store.Find("foo", $ifaceNil); /* */ $s = 8; case 8: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+				err = _r$5;
+				_arg$6 = err;
+				_arg$7 = $ifaceNil;
+				_r$6 = fmt.Sprintf("Expected error in Find but got nil", new sliceType([])); /* */ $s = 9; case 9: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+				_arg$8 = _r$6;
+				_r$7 = assert.NotEqual(_arg$6, _arg$7, _arg$8); /* */ $s = 10; case 10: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+				_r$7;
+				assert.DeepEqual(reflect.TypeOf(err), reflect.TypeOf((x$1 = new locstor.ItemNotFoundError.ptr(""), new x$1.constructor.elem(x$1))), "Error was not correct the correct type");
+				_i++;
+			/* } */ $s = 1; continue; case 2:
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._arg$6 = _arg$6; $f._arg$7 = _arg$7; $f._arg$8 = _arg$8; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._ref = _ref; $f.assert = assert; $f.err = err; $f.original = original; $f.store = store; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
 		}));
 	};
 	$init = function() {
