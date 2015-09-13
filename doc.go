@@ -6,7 +6,7 @@
 // allows you to store and retrieve any arbitrary go data structure, and is
 // intended to be compiled to javascript with gopherjs and run in the browser.
 //
-// Version X.X.X (develop)
+// Version 0.1.0
 //
 // For the full source code, example usage, and more information visit
 // https://github.com/go-humble/locstor.
