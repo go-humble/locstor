@@ -75,7 +75,11 @@ func SetItem(key, item string) (err error) {
 	}
 	defer func() {
 		if r := recover(); r != nil {
-			err = r.(error)
+			var ok bool
+			err, ok = r.(error)
+			if !ok {
+				err = fmt.Errorf("could not use local storage: %v", r)
+			}
 		}
 	}()
 
@@ -91,7 +95,12 @@ func GetItem(key string) (s string, err error) {
 	}
 	defer func() {
 		if r := recover(); r != nil {
-			err = r.(error)
+			var ok bool
+			err, ok = r.(error)
+			if !ok {
+				err = fmt.Errorf("could not use local storage: %v", r)
+			}
+			s = ""
 		}
 	}()
 
@@ -113,7 +122,12 @@ func Key(item string) (s string, err error) {
 	}
 	defer func() {
 		if r := recover(); r != nil {
-			err = r.(error)
+			var ok bool
+			err, ok = r.(error)
+			if !ok {
+				err = fmt.Errorf("could not use local storage: %v", r)
+			}
+			s = ""
 		}
 	}()
 
@@ -134,7 +148,11 @@ func RemoveItem(key string) (err error) {
 	}
 	defer func() {
 		if r := recover(); r != nil {
-			err = r.(error)
+			var ok bool
+			err, ok = r.(error)
+			if !ok {
+				err = fmt.Errorf("could not use local storage: %v", r)
+			}
 		}
 	}()
 
@@ -149,7 +167,12 @@ func Length() (l int, err error) {
 	}
 	defer func() {
 		if r := recover(); r != nil {
-			err = r.(error)
+			var ok bool
+			err, ok = r.(error)
+			if !ok {
+				err = fmt.Errorf("could not use local storage: %v", r)
+			}
+			l = 0
 		}
 	}()
 
@@ -164,7 +187,11 @@ func Clear() (err error) {
 	}
 	defer func() {
 		if r := recover(); r != nil {
-			err = r.(error)
+			var ok bool
+			err, ok = r.(error)
+			if !ok {
+				err = fmt.Errorf("could not use local storage: %v", r)
+			}
 		}
 	}()
 
