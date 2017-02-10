@@ -202,13 +202,15 @@ localStorage. It is a type that implements the `error` interface and tells you
 which key or item was not found. To check if an error is an `ItemNotFoundError`,
 you can use a type assertion:
 
+```go
 if err := locstor.GetItem("foo"); err != nil {
-	if _, ok := err.(locstor.ItemNotFoundError) {
+	if _, ok := err.(locstor.ItemNotFoundError); ok {
 		// Handle an ItemNotFoundError error 
 	} else {
 		// Handle some other type of error
 	}
 }
+```
 
 
 Testing
