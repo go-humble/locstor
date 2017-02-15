@@ -3,7 +3,7 @@ Humble/locstor
 
 [![GoDoc](https://godoc.org/github.com/go-humble/locstor?status.svg)](https://godoc.org/github.com/go-humble/locstor)
 
-Version 0.2.0
+Version 0.2.1
 
 locstor provides gopherjs bindings for the localStorage API. It allows you to
 store and retrieve any arbitrary go data structure, and is intended to be
